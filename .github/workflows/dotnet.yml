@@ -33,4 +33,3 @@ jobs:
       run: dotnet test --no-build --verbosity normal --filter Category=Integration
     - name: Build Docker image
       run: docker build -t album-api-image:${{ github.sha }} .
-      working-directory: Album-Api/Album.Api
