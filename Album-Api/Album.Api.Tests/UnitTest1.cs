@@ -16,6 +16,7 @@ public class UnitTest1 : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async void TestAPIHealth()
     {
         var response = await _client.GetAsync("/api/health");
@@ -54,4 +55,25 @@ public class UnitTest1 : IClassFixture<WebApplicationFactory<Program>>
         Assert.NotNull(contentNamed);
         Assert.Contains("Hello Test", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
     }
+
+    [Fact]
+    public async Task GreetingTest_SpecialCharacters()
+    {
+        var name = "Test@123";
+        var response = await _client.GetAsync($"/api/hello?name={name}");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
+    }
+
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task TestResponseType()
+    {
+        var response = await _client.GetAsync("/api/hello?name=Test");
+        response.EnsureSuccessStatusCode();
+        Assert.Equal("application/json; charset=utf-8", 
+                    response.Content.Headers.ContentType.ToString());
+    }
+
 }
