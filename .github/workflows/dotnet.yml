@@ -38,8 +38,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Integration Tests
       run: dotnet test --no-build --verbosity normal --filter Category=Integration
-    - name: Build Docker image
-      run: docker build -t album-api-image:${{ github.sha }} .
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -55,7 +53,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: cnsd/album
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: ${{ github.run_number }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
