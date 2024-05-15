@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 
-public class HelloUnitTests : IClassFixture<WebApplicationFactory<Program>>
+public class ControllerUnitTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
 
-    public HelloUnitTests(WebApplicationFactory<Program> factory)
+    public ControllerUnitTests(WebApplicationFactory<Program> factory)
     {
         _client = factory.CreateClient();
     }
