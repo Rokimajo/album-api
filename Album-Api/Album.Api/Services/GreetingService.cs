@@ -4,13 +4,20 @@ public class GreetingService : IGreeting
 {
     public async Task<string> ReturnHello(string name)
     {
+        // No error catching here to return error back to HelloController.cs
+        string returnString = "";
+        Console.WriteLine($"{DateTime.Now} | ReturnHello() called with " +
+                          (String.IsNullOrWhiteSpace(name) ? "an empty or null name" : $"name: {name}"));
         if (String.IsNullOrWhiteSpace(name))
         {
-            Console.WriteLine("ReturnHello() called with an empty or null name.");
-            return "Hello World";
+            returnString = "Hello World";
+        }
+        else
+        {
+            returnString = $"Hello {name}";
         }
 
-        Console.WriteLine($"ReturnHello() called with name: {name}.");
-        return $"Hello {name}";
+        Console.WriteLine($"{DateTime.Now} | ReturnHello() response: {returnString}");
+        return returnString;
     }
 }

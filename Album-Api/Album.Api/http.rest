@@ -1,4 +1,4 @@
 ﻿#### /API/HELLO (port 5100 for manual testing)
-GET http://localhost:5100/api/hello
+GET http://localhost:5100/api/hello?name= 
 #### HEALTH CHECK
 GET http://localhost:5100/api/health

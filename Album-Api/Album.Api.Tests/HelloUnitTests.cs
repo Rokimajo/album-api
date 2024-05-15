@@ -1,3 +1,5 @@
+using Album.Api.Services;
+
 namespace Album.Api.Tests;
 using System.Net;
 using System.Net.Http;
@@ -6,25 +8,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 
-public class UnitTest1 : IClassFixture<WebApplicationFactory<Program>>
+public class HelloUnitTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
 
-    public UnitTest1(WebApplicationFactory<Program> factory)
+    public HelloUnitTests(WebApplicationFactory<Program> factory)
     {
         _client = factory.CreateClient();
     }
 
     [Fact]
     [Trait("Category", "Integration")]
-    public async void TestAPIHealth()
+    public async void TestAPIHealth_HappyFlow()
     {
         var response = await _client.GetAsync("/api/health");
+        response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
     
     [Fact]
-    public async void GreetingTest_NullName()
+    public async void GreetingTest_Null_And_Empty_Name_HappyFlow()
     {
         var responseNull = await _client.GetAsync("/api/hello");
         var responseEmpty = await _client.GetAsync("/api/hello?name=");
@@ -47,33 +50,43 @@ public class UnitTest1 : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void GreetingTest_GivenName()
+    public async void GreetingTest_NameGiven_HappyFlow()
     {
-        var responseNamed = await _client.GetAsync("/api/hello?name=Test");
+        var name = "Test";
+        var responseNamed = await _client.GetAsync($"/api/hello?name={name}");
         responseNamed.EnsureSuccessStatusCode();
         var contentNamed = await responseNamed.Content.ReadAsStringAsync();
         Assert.NotNull(contentNamed);
-        Assert.Contains("Hello Test", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
+        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
     }
 
     [Fact]
-    public async Task GreetingTest_SpecialCharacters()
+    public async Task GreetingTest_SpecialCharacters_HappyFlow()
     {
         var name = "Test@123";
         var response = await _client.GetAsync($"/api/hello?name={name}");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
+        Assert.NotNull(content);
         Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
     }
 
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task TestResponseType()
+    public async Task TestContentType_HappyFlow()
     {
         var response = await _client.GetAsync("/api/hello?name=Test");
         response.EnsureSuccessStatusCode();
+        Assert.NotNull(response);
         Assert.Equal("application/json; charset=utf-8", 
                     response.Content.Headers.ContentType.ToString());
     }
 
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task GreetingTestError_SadFlow()
+    {
+        var response = await _client.GetAsync("/api/sadflow?name=Test");
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+    }
 }
