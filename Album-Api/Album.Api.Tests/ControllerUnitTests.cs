@@ -19,61 +19,53 @@ public class ControllerUnitTests : IClassFixture<WebApplicationFactory<Program>>
 
     [Fact]
     [Trait("Category", "Integration")]
-    public async void TestAPIHealth_HappyFlow()
+    public async void GivenAPI_WhenCheckHealth_ThenReturnOK()
     {
         var response = await _client.GetAsync("/api/health");
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
     
-    [Fact]
-    public async void GreetingTest_Null_And_Empty_Name_HappyFlow()
+    [Theory]
+    [InlineData("/api/hello")]
+    [InlineData("/api/hello?name=")]
+    [InlineData("/api/hello?name= ")]
+    public async Task GetGreeting_WhenGetHelloWithNullOrEmptyName_ThenReturnHelloWorld(string url)
     {
-        var responseNull = await _client.GetAsync("/api/hello");
-        var responseEmpty = await _client.GetAsync("/api/hello?name=");
-        var responseWhitespace = await _client.GetAsync("/api/hello?name= ");
-        responseNull.EnsureSuccessStatusCode();
-        responseEmpty.EnsureSuccessStatusCode();
-        responseWhitespace.EnsureSuccessStatusCode();
-        
-        var contentNull = await responseNull.Content.ReadAsStringAsync();
-        var contentEmpty = await responseEmpty.Content.ReadAsStringAsync();
-        var contentWhitespace = await responseWhitespace.Content.ReadAsStringAsync();
+        var response = await _client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
 
-        Assert.NotNull(contentNull);
-        Assert.NotNull(contentEmpty);
-        Assert.NotNull(contentWhitespace);
+        var content = await response.Content.ReadAsStringAsync();
 
-        Assert.Contains("Hello World", JsonConvert.DeserializeObject<Model>(contentNull).Response);
-        Assert.Contains("Hello World", JsonConvert.DeserializeObject<Model>(contentEmpty).Response);
-        Assert.Contains("Hello World", JsonConvert.DeserializeObject<Model>(contentWhitespace).Response);
+        Assert.NotNull(content);
+        Assert.Contains("Hello World", JsonConvert.DeserializeObject<Model>(content).Response);
     }
 
     [Fact]
-    public async void GreetingTest_NameGiven_HappyFlow()
+    public async void GetGreeting_WhenGetHelloWithName_ThenReturnHelloName()
     {
         var name = "Test";
         var responseNamed = await _client.GetAsync($"/api/hello?name={name}");
         responseNamed.EnsureSuccessStatusCode();
         var contentNamed = await responseNamed.Content.ReadAsStringAsync();
         Assert.NotNull(contentNamed);
-        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
+        Assert.Equal($"Hello {name}", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
     }
 
     [Fact]
-    public async Task GreetingTest_SpecialCharacters_HappyFlow()
+    public async Task GetGreeting_WhenGetHelloWithSpecialCharacters_ThenReturnHelloName()
     {
         var name = "Test@123";
         var response = await _client.GetAsync($"/api/hello?name={name}");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         Assert.NotNull(content);
-        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
+        Assert.Equal($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
     }
 
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task TestContentType_HappyFlow()
+    public async Task GetGreeting_WhenGetHelloWithName_ThenReturnContentTypeJson()
     {
         var response = await _client.GetAsync("/api/hello?name=Test");
         response.EnsureSuccessStatusCode();
@@ -84,7 +76,7 @@ public class ControllerUnitTests : IClassFixture<WebApplicationFactory<Program>>
 
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task GreetingTestError_SadFlow()
+    public async Task GetGreeting_WhenGetHelloSadFlow_ThenReturnInternalServerError()
     {
         var response = await _client.GetAsync("/api/sadflow?name=Test");
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
