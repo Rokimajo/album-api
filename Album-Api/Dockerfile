@@ -12,4 +12,4 @@ COPY --from=build-env /App/out .
 # Let ASP.NET Core run the application on port 80 instead of 8080. Both of these lines accomplish this.
 ENV ASPNETCORE_HTTP_PORTS=80
 EXPOSE 80
-ENTRYPOINT ["dotnet", "Album-Api.dll"]
+ENTRYPOINT ["dotnet", "Album.Api.dll"]
