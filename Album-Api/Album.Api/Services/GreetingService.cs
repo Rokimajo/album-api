@@ -1,4 +1,6 @@
-﻿namespace Album.Api.Services;
+﻿using System.Net;
+
+namespace Album.Api.Services;
 
 public class GreetingService : IGreeting
 {
@@ -10,11 +12,11 @@ public class GreetingService : IGreeting
                           (String.IsNullOrWhiteSpace(name) ? "an empty or null name" : $"name: {name}"));
         if (String.IsNullOrWhiteSpace(name))
         {
-            returnString = "Hello World";
+            returnString = $"Hello World from {Dns.GetHostName()}";
         }
         else
         {
-            returnString = $"Hello {name}";
+            returnString = $"Hello {name} from {Dns.GetHostName()}";
         }
 
         Console.WriteLine($"{DateTime.Now} | ReturnHello() response: {returnString}");
