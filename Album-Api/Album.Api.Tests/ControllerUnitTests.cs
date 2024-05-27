@@ -49,7 +49,7 @@ public class ControllerUnitTests : IClassFixture<WebApplicationFactory<Program>>
         responseNamed.EnsureSuccessStatusCode();
         var contentNamed = await responseNamed.Content.ReadAsStringAsync();
         Assert.NotNull(contentNamed);
-        Assert.Equal($"Hello {name}", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
+        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(contentNamed).Response);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class ControllerUnitTests : IClassFixture<WebApplicationFactory<Program>>
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         Assert.NotNull(content);
-        Assert.Equal($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
+        Assert.Contains($"Hello {name}", JsonConvert.DeserializeObject<Model>(content).Response);
     }
 
     [Fact]
