@@ -18,7 +18,6 @@ public class GreetingService : IGreeting
         {
             returnString = $"Hello {name} from {Dns.GetHostName()} v2";
         }
-
         Console.WriteLine($"{DateTime.Now} | ReturnHello() response: {returnString}");
         return returnString;
     }
