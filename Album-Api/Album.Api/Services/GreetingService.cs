@@ -12,11 +12,11 @@ public class GreetingService : IGreeting
                           (String.IsNullOrWhiteSpace(name) ? "an empty or null name" : $"name: {name}"));
         if (String.IsNullOrWhiteSpace(name))
         {
-            returnString = $"Hello World from {Dns.GetHostName()}";
+            returnString = $"Hello World from {Dns.GetHostName()} v2";
         }
         else
         {
-            returnString = $"Hello {name} from {Dns.GetHostName()}";
+            returnString = $"Hello {name} from {Dns.GetHostName()} v2";
         }
 
         Console.WriteLine($"{DateTime.Now} | ReturnHello() response: {returnString}");
