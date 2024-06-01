@@ -2,7 +2,7 @@
     "containerDefinitions": [
         {
             "name": "AlbumContainer",
-            "cpu": 51,
+            "cpu": 0,
             "memory": 154,
             "memoryReservation": 102,
             "portMappings": [
