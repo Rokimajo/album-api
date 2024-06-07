@@ -17,7 +17,11 @@ public class Program
         var connectionString = Environment.GetEnvironmentVariable("AWSConnection");
         if (string.IsNullOrEmpty(connectionString))
         {
-            Console.WriteLine("Connection string is not set in environment variables.");
+            // fallback connection string here due to the task-definition.json not being available as environment variable outside ECS.
+            // ECS will still use the correct environment variables inside task-definition.json.
+            Console.WriteLine("Cannot read environment variable connection string, using fallback..");
+            builder.Services.AddDbContext<AWSContext>(options =>
+                options.UseNpgsql("Server=cnsd-db-209962794367.cip3pme240ba.us-east-1.rds.amazonaws.com;Port=5432;Database=albumdatabase;User Id=postgres;Password=rUAtb$Ri3L4puT*%"));
         }
         else
         {
