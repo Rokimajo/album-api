@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,8 @@ namespace Album.Api.Controllers
 
         // GET: api/Album
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<AlbumModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<AlbumModel>>> GetAlbums()
         {
             try
@@ -41,6 +44,8 @@ namespace Album.Api.Controllers
 
         // GET: api/Album/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(AlbumModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<AlbumModel>> GetAlbumModel(int id)
         {
             var albumModel = await _albumService.GetAlbumModel(id);
@@ -56,6 +61,9 @@ namespace Album.Api.Controllers
         // PUT: api/Album/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> PutAlbumModel(int id, AlbumModel albumModel)
         {
             if (id != albumModel.ID)
@@ -87,6 +95,7 @@ namespace Album.Api.Controllers
         // POST: api/Album
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesResponseType(typeof(AlbumModel), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<AlbumModel>> PostAlbumModel(AlbumModel albumModel)
         {
             await _albumService.PostAlbumModel(albumModel);
@@ -95,6 +104,8 @@ namespace Album.Api.Controllers
 
         // DELETE: api/Album/5
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> DeleteAlbumModel(int id)
         {
             var result = await _albumService.DeleteAlbumModel(id);
