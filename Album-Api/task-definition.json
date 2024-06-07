@@ -15,7 +15,12 @@
                 }
             ],
             "essential": true,
-            "environment": [],
+            "environment": [
+                {
+                    "name": "AWSConnection",
+                    "value": "Server=cnsd-db-209962794367.cip3pme240ba.us-east-1.rds.amazonaws.com;Port=5432;Database=albumdatabase;User Id=postgres;Password=rUAtb$Ri3L4puT*%"
+                }
+            ],
             "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
