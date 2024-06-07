@@ -14,8 +14,16 @@ public class Program
         builder.Services.AddTransient<IGreeting, GreetingService>();
         builder.Services.AddTransient<IAlbumService, AlbumService>();
         builder.Services.AddTransient<FakeGreetingService>();
-        builder.Services.AddDbContext<AWSContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("AWSConnection")));
+        var connectionString = Environment.GetEnvironmentVariable("AWSConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            Console.WriteLine("Connection string is not set in environment variables.");
+        }
+        else
+        {
+            builder.Services.AddDbContext<AWSContext>(options =>
+                options.UseNpgsql(connectionString));
+        }
         // Add services to the container.
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
