@@ -14,6 +14,7 @@ public class Program
         builder.Services.AddTransient<IGreeting, GreetingService>();
         builder.Services.AddTransient<IAlbumService, AlbumService>();
         builder.Services.AddTransient<FakeGreetingService>();
+        builder.Services.AddCors();
         var connectionString = Environment.GetEnvironmentVariable("AWSConnection");
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -42,6 +43,10 @@ public class Program
             app.UseSwaggerUI();
         }
         app.MapControllers();
+        app.UseCors(policy => policy
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin());
         app.Run();
         Console.WriteLine($"{DateTime.Now} | Application shut down.");
     }
